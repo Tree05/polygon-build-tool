@@ -298,6 +298,12 @@ calculateButton.addEventListener("click", (event) => {
             color: "#aaa",
         });
 
+        calculator.setExpression({
+            id: "origin",
+            latex: `(${initialPosition.components[0]}, ${initialPosition.components[1]})`,
+            color: "#888",
+        });
+
         console.log(vectors);
 
         console.log(vectors[0].subtract(vectors[1]));
