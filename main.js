@@ -231,8 +231,8 @@ calculateButton.addEventListener("click", (event) => {
     if (nSidesInput.value && radiusInput && lengthInput) {
         const initialPosition = initialPositionInput.value
             ? new Vector(
-                  Number(initialPositionInput.value.match(/-?\d+/g)[0]),
-                  Number(initialPositionInput.value.match(/-?\d+/g)[1])
+                  Number(initialPositionInput.value.match(/-?\d+/g)[0] || 0),
+                  Number(initialPositionInput.value.match(/-?\d+/g)[1] || 0)
               )
             : new Vector(0, 0);
 
