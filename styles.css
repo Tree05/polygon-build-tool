@@ -279,6 +279,12 @@ h2 {
     cursor: pointer;
     text-transform: uppercase;
     margin: 10px 0 -5px 0;
+    transition: ease-in-out;
+}
+
+#calculate:hover {
+    /* background: var(--gradient2); */
+    filter: brightness(1.1);
 }
 
 button:hover {

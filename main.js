@@ -277,8 +277,8 @@ calculateButton.addEventListener("click", (event) => {
             v1 = v ? v : null;
 
             v = findVector(radiusInput.value, nSidesInput.value, rotation, initialPosition)
-                .round(roundTo)
-                .transform(matrix);
+                .transform(matrix)
+                .round(roundTo);
             // console.log(v);
             console.log(v.round(3));
             console.log(rotation);
