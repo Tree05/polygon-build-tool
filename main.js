@@ -2,7 +2,7 @@ var elt = document.getElementById("calculator");
 var calculator = Desmos.GraphingCalculator(elt, {
     expressions: false,
 });
-calculator.setExpression({ id: "graph1", latex: "y=x^2" });
+// calculator.setExpression({ id: "graph1", latex: "y=x^2" });
 
 const nSidesInput = document.querySelector("#sides");
 const radiusInput = document.querySelector("#radius");
