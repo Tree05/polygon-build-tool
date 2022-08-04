@@ -6,6 +6,7 @@ var calculator = Desmos.GraphingCalculator(elt, {
 
 const nSidesInput = document.querySelector("#sides");
 const radiusInput = document.querySelector("#radius");
+const apothemInput = document.querySelector("#apothem");
 const lengthInput = document.querySelector("#length");
 const rotationInput = document.querySelector("#rotation");
 const initialPositionInput = document.querySelector("#initial-position");
@@ -101,6 +102,14 @@ function findRadiusFromSideLength(length, nSides) {
     // return 2 * length * Math.sin(toRadians(180 / nSides));
 }
 
+function radiusToApothem(radius, nSides) {
+    return radius * Math.cos(Math.PI / nSides);
+}
+
+function apothemToRadius(apothem, nSides) {
+    return apothem * (1 / Math.cos(Math.PI / nSides));
+}
+
 function sideLengthFromRadius(radius, nSides) {
     return 2 * radius * Math.sin(Math.PI / nSides);
     // return radius / (2 * Math.sin(toRadians(180 / nSides)));
@@ -138,6 +147,15 @@ function updateRadiusInput() {
             findRadiusFromSideLength(lengthInput.value, nSidesInput.value),
             3
         );
+        // return;
+    }
+}
+
+function updateRadiusInputApothem() {
+    if (apothemInput.value) {
+        console.log(round(apothemToRadius(apothemInput.value, nSidesInput.value), 3));
+        radiusInput.value = round(apothemToRadius(apothemInput.value, nSidesInput.value), 3);
+        // updateLengthInput();
     }
 }
 
@@ -152,17 +170,36 @@ function updateLengthInput() {
     }
 }
 
+function updateApothemInput() {
+    if (radiusInput.value) {
+        console.log(round(radiusToApothem(radiusInput.value, nSidesInput.value), 3));
+        apothemInput.value = round(radiusToApothem(radiusInput.value, nSidesInput.value), 3);
+    } else if (lengthInput.value) {
+        updateRadiusInput();
+        console.log(round(radiusToApothem(radiusInput.value, nSidesInput.value), 3));
+        apothemInput.value = round(radiusToApothem(radiusInput.value, nSidesInput.value), 3);
+    }
+}
+
 radiusInput.addEventListener("change", (event) => {
+    updateLengthInput();
+    updateApothemInput();
+});
+
+apothemInput.addEventListener("change", (event) => {
+    updateRadiusInputApothem();
     updateLengthInput();
 });
 
 lengthInput.addEventListener("change", (event) => {
     updateRadiusInput();
+    updateApothemInput();
 });
 
 nSidesInput.addEventListener("change", (event) => {
     updateLengthInput();
     updateRadiusInput();
+    updateApothemInput();
 });
 
 calculateButton.addEventListener("click", (event) => {
