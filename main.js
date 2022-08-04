@@ -41,6 +41,7 @@ function createPositionNode(index, components) {
 
 // #region functions
 
+const sum = (arr) => arr.reduce((acc, value) => acc + value, 0);
 class Vector {
     constructor(...components) {
         this.components = components;
@@ -79,6 +80,28 @@ class Vector {
 
     length() {
         return Math.hypot(...this.components);
+    }
+
+    transform(matrix) {
+        const columns = matrix.columns();
+        if (columns.length !== this.components.length) {
+            throw new Error("Matrix columns length should be equal to vector components length.");
+        }
+
+        const multiplied = columns.map((column, i) => column.map((c) => c * this.components[i]));
+        const newComponents = multiplied[0].map((_, i) =>
+            sum(multiplied.map((column) => column[i]))
+        );
+        return new Vector(...newComponents);
+    }
+}
+
+class Matrix {
+    constructor(...rows) {
+        this.rows = rows;
+    }
+    columns() {
+        return this.rows[0].map((_, i) => this.rows.map((r) => r[i]));
     }
 }
 
@@ -213,6 +236,21 @@ calculateButton.addEventListener("click", (event) => {
               )
             : new Vector(0, 0);
 
+        const matrix = matrixTransformInput.value
+            ? new Matrix(
+                  [
+                      Number(matrixTransformInput.value.match(/-?\d+/g)[0] || 0),
+                      Number(matrixTransformInput.value.match(/-?\d+/g)[1] || 0),
+                  ],
+                  [
+                      Number(matrixTransformInput.value.match(/-?\d+/g)[2] || 0),
+                      Number(matrixTransformInput.value.match(/-?\d+/g)[3] || 0),
+                  ]
+              )
+            : new Matrix([1, 0], [0, 1]);
+
+        console.log(matrix);
+
         console.log(initialPosition);
         console.log(
             findVector(radiusInput.value, nSidesInput.value, rotationInput.value, initialPosition)
@@ -238,9 +276,9 @@ calculateButton.addEventListener("click", (event) => {
 
             v1 = v ? v : null;
 
-            v = findVector(radiusInput.value, nSidesInput.value, rotation, initialPosition).round(
-                roundTo
-            );
+            v = findVector(radiusInput.value, nSidesInput.value, rotation, initialPosition)
+                .round(roundTo)
+                .transform(matrix);
             // console.log(v);
             console.log(v.round(3));
             console.log(rotation);
@@ -296,6 +334,18 @@ calculateButton.addEventListener("click", (event) => {
                 initialPosition.components[1]
             })^{2}=${round(radiusInput.value, roundTo)}^2`,
             color: "#aaa",
+        });
+
+        calculator.setExpression({
+            id: "ellipse",
+            latex: `( (x * cos(a) - y * sin(a) )^2 / (${matrix.rows[0][0]})^2 ) +
+            ( (x * sin(a) - y * cos(a) )^2 / (${matrix.rows[1][1]})^2 ) = 
+            ${round(radiusInput.value, roundTo)}^2`,
+        });
+
+        calculator.setExpression({
+            id: "a",
+            latex: `a = ${matrix.rows[0][1]}`,
         });
 
         calculator.setExpression({
