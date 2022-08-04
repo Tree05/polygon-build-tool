@@ -8,6 +8,7 @@ const nSidesInput = document.querySelector("#sides");
 const radiusInput = document.querySelector("#radius");
 const lengthInput = document.querySelector("#length");
 const rotationInput = document.querySelector("#rotation");
+const initialPositionInput = document.querySelector("#initial-position");
 const matrixTransformInput = document.querySelector("#matrix-transform");
 const roundToInput = document.querySelector("#roundTo");
 
@@ -168,7 +169,17 @@ calculateButton.addEventListener("click", (event) => {
     calculator.setBlank();
 
     if (nSidesInput.value && radiusInput && lengthInput) {
-        console.log(findVector(radiusInput.value, nSidesInput.value, rotationInput.value));
+        const initialPosition = initialPositionInput.value
+            ? new Vector(
+                  Number(initialPositionInput.value.match(/-?\d+/g)[0]),
+                  Number(initialPositionInput.value.match(/-?\d+/g)[1])
+              )
+            : new Vector(0, 0);
+
+        console.log(initialPosition);
+        console.log(
+            findVector(radiusInput.value, nSidesInput.value, rotationInput.value, initialPosition)
+        );
         // console.log(
         //     (findVector(lengthInput.value, nSidesInput.value, rotationInput.value), 3).round()
         // );
@@ -190,7 +201,9 @@ calculateButton.addEventListener("click", (event) => {
 
             v1 = v ? v : null;
 
-            v = findVector(radiusInput.value, nSidesInput.value, rotation);
+            v = findVector(radiusInput.value, nSidesInput.value, rotation, initialPosition).round(
+                roundTo
+            );
             // console.log(v);
             console.log(v.round(3));
             console.log(rotation);
@@ -209,15 +222,15 @@ calculateButton.addEventListener("click", (event) => {
 
             if (i === 1) v0 = v;
 
-            resultDiv.appendChild(createPositionNode(i, v.round(roundTo).components));
+            resultDiv.appendChild(createPositionNode(i, v.components));
 
-            // console.log(i, v.round(roundTo).components);
-            console.log("(" + v.round(roundTo).components.join(", ") + ")");
+            // console.log(i, v.components);
+            console.log("(" + v.components.join(", ") + ")");
 
             try {
                 calculator.setExpression({
                     id: `P${i}`,
-                    latex: "(" + v.round(roundTo).components.join(", ") + ")",
+                    latex: "(" + v.components.join(", ") + ")",
                 });
 
                 if (v1) {
@@ -242,7 +255,9 @@ calculateButton.addEventListener("click", (event) => {
 
         calculator.setExpression({
             id: "cicle",
-            latex: `x^{2}+y^{2}=${radiusInput.value}^2`,
+            latex: `(x-${initialPosition.components[0]})^{2}+(y-${
+                initialPosition.components[1]
+            })^{2}=${round(radiusInput.value, roundTo)}^2`,
             color: "#aaa",
         });
 
