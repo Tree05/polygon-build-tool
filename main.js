@@ -330,23 +330,22 @@ calculateButton.addEventListener("click", (event) => {
 
         calculator.setExpression({
             id: "cicle",
-            latex: `(x-${initialPosition.components[0]})^{2}+(y-${
-                initialPosition.components[1]
-            })^{2}=${round(radiusInput.value, roundTo)}^2`,
+            latex: `(x- ${initialPosition.components[0]})^{2} + 
+            (y- ${initialPosition.components[1]})^{2}= (${round(radiusInput.value, roundTo)}) ^2`,
             color: "#aaa",
         });
 
-        calculator.setExpression({
-            id: "ellipse",
-            latex: `( (x * cos(a) - y * sin(a) )^2 / (${matrix.rows[0][0]})^2 ) +
-            ( (x * sin(a) - y * cos(a) )^2 / (${matrix.rows[1][1]})^2 ) = 
-            ${round(radiusInput.value, roundTo)}^2`,
-        });
+        // calculator.setExpression({
+        //     id: "ellipse",
+        //     latex: `( (x * cos(a) - y * sin(a) )^2 / (${matrix.rows[0][0]})^2 ) +
+        //     ( (x * sin(a) - y * cos(a) )^2 / (${matrix.rows[1][1]})^2 ) =
+        //     ${round(radiusInput.value, roundTo)}^2`,
+        // });
 
-        calculator.setExpression({
-            id: "a",
-            latex: `a = ${matrix.rows[0][1]}`,
-        });
+        // calculator.setExpression({
+        //     id: "a",
+        //     latex: `a = ${matrix.rows[0][1]}`,
+        // });
 
         calculator.setExpression({
             id: "origin",
@@ -356,8 +355,10 @@ calculateButton.addEventListener("click", (event) => {
 
         console.log(vectors);
 
-        console.log(vectors[0].subtract(vectors[1]));
-        console.log(vectors[0].subtract(vectors[1]).length());
+        if (vectors[1]) {
+            console.log(vectors[0].subtract(vectors[1]));
+            console.log(vectors[0].subtract(vectors[1]).length());
+        }
 
         // calculator.setExpression({
         //     id: `segment${nSidesInput.value}`,
