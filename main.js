@@ -1,7 +1,20 @@
-var elt = document.getElementById("calculator");
-var calculator = Desmos.GraphingCalculator(elt, {
-    expressions: false,
-});
+let couldConnectToDesmos = true;
+let calculator;
+
+try {
+    const elt = document.getElementById("calculator");
+    calculator = Desmos.GraphingCalculator(elt, {
+        expressions: false,
+    });
+} catch (error) {
+    couldConnectToDesmos = false;
+    document.querySelector("#calculator").textContent =
+        "Couldn't connect to Desmos. Check your Internet Connection and try again";
+    document.querySelector("#calculator").style.padding = "0 10px";
+    document.querySelector("#calculator").style.width = "";
+    document.querySelector("#graph").style.backgroundColor = "#ffffff40";
+    console.error(error);
+}
 // calculator.setExpression({ id: "graph1", latex: "y=x^2" });
 
 const nSidesInput = document.querySelector("#sides");
@@ -149,14 +162,6 @@ function round(number, decimals) {
         : Math.round(number * 10 ** decimals) / 10 ** decimals;
 }
 
-// function roundVector(vector, decimals) {
-//     let roundedVector = [];
-//     for (const component of vector) {
-//         roundedVector.push(round(component, decimals));
-//     }
-//     return roundedVector;
-// }
-
 // #endregion
 
 function updateRadiusInput() {
@@ -226,35 +231,67 @@ nSidesInput.addEventListener("change", (event) => {
 });
 
 calculateButton.addEventListener("click", (event) => {
-    calculator.setBlank();
+    if (couldConnectToDesmos) calculator.setBlank();
 
     if (nSidesInput.value && radiusInput && lengthInput) {
-        const initialPosition = initialPositionInput.value
+        const initialPositionMatched = initialPositionInput.value.match(/-?\d+/g);
+        const initialPositionFromOrigin = initialPositionInput.value
             ? new Vector(
-                  Number(initialPositionInput.value.match(/-?\d+/g)[0] || 0),
-                  Number(initialPositionInput.value.match(/-?\d+/g)[1] || 0)
+                  Number(initialPositionMatched[0] || 0),
+                  Number(initialPositionMatched[1] || 0)
               )
             : new Vector(0, 0);
 
+        const matrixMatched = matrixTransformInput.value.match(/-?\d+/g);
         const matrix = matrixTransformInput.value
             ? new Matrix(
-                  [
-                      Number(matrixTransformInput.value.match(/-?\d+/g)[0] || 0),
-                      Number(matrixTransformInput.value.match(/-?\d+/g)[1] || 0),
-                  ],
-                  [
-                      Number(matrixTransformInput.value.match(/-?\d+/g)[2] || 0),
-                      Number(matrixTransformInput.value.match(/-?\d+/g)[3] || 0),
-                  ]
+                  [Number(matrixMatched[0] || 0), Number(matrixMatched[1] || 0)],
+                  [Number(matrixMatched[2] || 0), Number(matrixMatched[3] || 0)]
               )
             : new Matrix([1, 0], [0, 1]);
 
+        const isFromVector =
+            !!initialPositionMatched &&
+            initialPositionMatched.length >= 3 &&
+            Number(initialPositionMatched[2]) <= Number(nSidesInput.value)
+                ? Number(initialPositionMatched[2] || null)
+                : null;
+
+        console.log("isFromVector", isFromVector);
+
         console.log(matrix);
 
-        console.log(initialPosition);
+        console.log(initialPositionFromOrigin);
         console.log(
-            findVector(radiusInput.value, nSidesInput.value, rotationInput.value, initialPosition)
+            findVector(
+                radiusInput.value,
+                nSidesInput.value,
+                rotationInput.value,
+                initialPositionFromOrigin
+            )
         );
+        const roundTo = roundToInput.value ? roundToInput.value : 3;
+
+        const initialPosition = isFromVector
+            ? new Vector(0, 0).subtract(
+                  findVector(
+                      radiusInput.value,
+                      nSidesInput.value,
+                      Number(rotationInput.value) +
+                          Number(360 / nSidesInput.value) * (isFromVector - 1),
+                      new Vector(0, 0).subtract(initialPositionFromOrigin)
+                  )
+                      .transform(matrix)
+                      .round(roundTo)
+              )
+            : initialPositionFromOrigin;
+
+        console.log("initial position", initialPosition);
+        console.log(
+            "initial position angle: ",
+            Number(rotationInput.value) + Number(360 / nSidesInput.value) * (isFromVector - 1)
+        );
+
         // console.log(
         //     (findVector(lengthInput.value, nSidesInput.value, rotationInput.value), 3).round()
         // );
@@ -263,7 +300,6 @@ calculateButton.addEventListener("click", (event) => {
 
         resultDiv.innerHTML = "";
 
-        const roundTo = roundToInput.value ? roundToInput.value : 3;
         let v;
         let v0;
         let v1;
@@ -284,15 +320,6 @@ calculateButton.addEventListener("click", (event) => {
             console.log(rotation);
             rotation += Number(360 / nSidesInput.value);
 
-            // resultDiv.appendChild(
-            //     `
-            //     <div id="pos${i}" class="pos">
-            //             <span>pos${i}:</span>
-            //             <span class="white">${v.components}</span>
-            //         </div>
-            //     `
-            // );
-
             vectors.push(v);
 
             if (i === 1) v0 = v;
@@ -302,56 +329,59 @@ calculateButton.addEventListener("click", (event) => {
             // console.log(i, v.components);
             console.log("(" + v.components.join(", ") + ")");
 
-            try {
-                calculator.setExpression({
-                    id: `P${i}`,
-                    latex: "(" + v.components.join(", ") + ")",
-                });
-
-                if (v1) {
-                    console.log("v1 = " + v1.components);
-                    console.log("v = " + v.components);
+            if (couldConnectToDesmos)
+                try {
                     calculator.setExpression({
-                        id: `segment${i - 1}`,
-                        latex: `( (1-t)*${v1.components[0]} + t*${v.components[0]} , (1-t)*${v1.components[1]} + t*${v.components[1]} )`,
-                        color: Desmos.Colors.BLUE,
+                        id: `P${i}`,
+                        latex: "(" + v.components.join(", ") + ")",
                     });
+
+                    if (v1) {
+                        console.log("v1 = " + v1.components);
+                        console.log("v = " + v.components);
+                        calculator.setExpression({
+                            id: `segment${i - 1}`,
+                            latex: `( (1-t)*${v1.components[0]} + t*${v.components[0]} , (1-t)*${v1.components[1]} + t*${v.components[1]} )`,
+                            color: Desmos.Colors.BLUE,
+                        });
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
-            } catch (error) {
-                console.error(error);
-            }
         }
 
-        calculator.setExpression({
-            id: `segment${nSidesInput.value}`,
-            latex: `( (1-t)*${v.components[0]} + t*${v0.components[0]} , (1-t)*${v.components[1]} + t*${v0.components[1]} )`,
-            color: Desmos.Colors.BLUE,
-        });
+        if (couldConnectToDesmos) {
+            calculator.setExpression({
+                id: `segment${nSidesInput.value}`,
+                latex: `( (1-t)*${v.components[0]} + t*${v0.components[0]} , (1-t)*${v.components[1]} + t*${v0.components[1]} )`,
+                color: Desmos.Colors.BLUE,
+            });
 
-        calculator.setExpression({
-            id: "cicle",
-            latex: `(x- ${initialPosition.components[0]})^{2} + 
+            calculator.setExpression({
+                id: "cicle",
+                latex: `(x- ${initialPosition.components[0]})^{2} +
             (y- ${initialPosition.components[1]})^{2}= (${round(radiusInput.value, roundTo)}) ^2`,
-            color: "#aaa",
-        });
+                color: "#aaa",
+            });
 
-        // calculator.setExpression({
-        //     id: "ellipse",
-        //     latex: `( (x * cos(a) - y * sin(a) )^2 / (${matrix.rows[0][0]})^2 ) +
-        //     ( (x * sin(a) - y * cos(a) )^2 / (${matrix.rows[1][1]})^2 ) =
-        //     ${round(radiusInput.value, roundTo)}^2`,
-        // });
+            // calculator.setExpression({
+            //     id: "ellipse",
+            //     latex: `( (x * cos(a) - y * sin(a) )^2 / (${matrix.rows[0][0]})^2 ) +
+            //     ( (x * sin(a) - y * cos(a) )^2 / (${matrix.rows[1][1]})^2 ) =
+            //     ${round(radiusInput.value, roundTo)}^2`,
+            // });
 
-        // calculator.setExpression({
-        //     id: "a",
-        //     latex: `a = ${matrix.rows[0][1]}`,
-        // });
+            // calculator.setExpression({
+            //     id: "a",
+            //     latex: `a = ${matrix.rows[0][1]}`,
+            // });
 
-        calculator.setExpression({
-            id: "origin",
-            latex: `(${initialPosition.components[0]}, ${initialPosition.components[1]})`,
-            color: "#888",
-        });
+            calculator.setExpression({
+                id: "origin",
+                latex: `(${initialPosition.components[0]}, ${initialPosition.components[1]})`,
+                color: "#888",
+            });
+        }
 
         console.log(vectors);
 

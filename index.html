@@ -53,11 +53,18 @@
                 <div id="inputs">
                     <div id="sides-div">
                         <label for="sides">Number of sides:</label>
-                        <input type="number" name="sides" id="sides" min="0" step="1" />
+                        <input
+                            type="number"
+                            name="sides"
+                            id="sides"
+                            min="0"
+                            step="1"
+                            onchange="value = Math.abs(value)"
+                        />
                     </div>
                     <div id="radius-div">
                         <label for="radius">Radius:</label>
-                        <input type="number" name="radius" id="radius" min="0" step="1" />
+                        <input type="number" name="radius" id="radius" step="1" />
                     </div>
                     <div id="apothem-div">
                         <label for="apothem">Apothem:</label>
@@ -84,7 +91,7 @@
                             type="text"
                             name="initial-position"
                             id="initial-position"
-                            placeholder="(x, y)"
+                            placeholder="(x, y), from node (optional)"
                         />
                     </div>
                     <div id="roundTo-div">
@@ -120,7 +127,7 @@
                         <h2>Result:</h2>
                     </div>
                     <div id="result">
-                        <div id="pos1" class="pos">
+                        <!-- <div id="pos1" class="pos">
                             <span>pos1:</span>
                             <span class="white white-emphasis">(3, 4)</span>
                         </div>
@@ -143,6 +150,11 @@
                         <div id="pos6" class="pos">
                             <span>pos6:</span>
                             <span class="white white-emphasis">(3, 4)</span>
+                        </div> -->
+                        <div style="width: 90%" class="pos">
+                            <span>
+                                The positions will appear here once you press the calculate button
+                            </span>
                         </div>
                     </div>
                 </div>

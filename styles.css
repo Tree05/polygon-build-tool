@@ -302,6 +302,7 @@ button:hover {
     display: flex;
     margin: 5px;
     justify-content: space-between;
+    gap: 5px;
 }
 
 .pos {
@@ -312,6 +313,10 @@ button:hover {
     box-shadow: 0 8px 32px 0 rgba(20, 24, 92, 0.3);
     padding: 8px;
     backdrop-filter: blur(6px);
+}
+
+.pos .white {
+    word-break: break-word;
 }
 
 .divide-sections {
@@ -371,6 +376,10 @@ button:hover {
 
     .results {
         margin: 0 -10px -10px -10px;
+    }
+
+    #result > div {
+        width: 90%;
     }
 }
 
