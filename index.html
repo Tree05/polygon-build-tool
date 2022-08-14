@@ -186,7 +186,7 @@
             if ("serviceWorker" in navigator) {
                 // navigator.serviceWorker.register("srcripts/serviceworker.js");
                 navigator.serviceWorker
-                    .register("repository/serviceworker.js") // add repository when pushing to github
+                    .register("serviceworker.js")
                     .then((registration) => {
                         console.log("service worker loaded");
                         registration.update();
