@@ -94,6 +94,7 @@ p {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.418);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
@@ -109,6 +110,7 @@ p {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.418);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
@@ -126,7 +128,7 @@ p {
     background: rgba(255, 255, 255, 1);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.418);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(8px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
@@ -275,6 +277,7 @@ h2 {
     color: #fff;
     padding: 10px;
     width: -webkit-fill-available;
+    width: -moz-available;
     font-weight: 500;
     cursor: pointer;
     text-transform: uppercase;
@@ -336,6 +339,7 @@ button:hover {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.418);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
@@ -396,6 +400,7 @@ button:hover {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.418);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     transform: translate(0, 163px);
