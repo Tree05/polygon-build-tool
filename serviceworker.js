@@ -33,7 +33,10 @@ self.addEventListener("install", (event) => {
             .open(staticCacheName)
             .then((cache) => {
                 console.log("chaching all assets");
-                cache.addAll(assets);
+                cache
+                    .addAll(assets)
+                    .then((a) => console.log(a))
+                    .catch((error) => console.error(error));
             })
             .catch((error) => console.error(error))
     );
