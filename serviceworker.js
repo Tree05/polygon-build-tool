@@ -2,12 +2,12 @@ const staticCacheName = "site-static-v3";
 const dynamicCacheName = "site-dynamic-v2";
 const CACHE_LIMIT = 15;
 const assets = [
-    "/",
-    "/index.html",
-    "/scripts/main.js",
-    "/scripts/desmos-api.js",
-    "/styles.css",
-    "/icons/thumbnail-512.png",
+    "./",
+    "./index.html",
+    "./scripts/main.js",
+    "./scripts/desmos-api.js",
+    "./styles.css",
+    "./icons/thumbnail-512.png",
     // "https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6",
 ];
 
