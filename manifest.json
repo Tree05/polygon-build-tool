@@ -2,7 +2,7 @@
     "$schema": "https://json.schemastore.org/web-manifest-combined.json",
     "name": "Polygon Build Tool",
     "short_name": "Polygon Tool",
-    "start_url": "/polygon-build-tool/serviceworker",
+    "start_url": "/polygon-build-tool/index.html",
     "display": "standalone",
     "background_color": "#fff",
     "theme_color": "#6455dd",
