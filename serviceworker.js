@@ -1,14 +1,14 @@
-const staticCacheName = "site-static-v5";
-const dynamicCacheName = "site-dynamic-v4";
+const staticCacheName = "site-static-v7";
+const dynamicCacheName = "site-dynamic-v6";
 const CACHE_LIMIT = 15;
 const assets = [
     "./",
     "./index.html",
     "./scripts/main.js",
-    "./scripts/desmos-api.js",
+    // "./scripts/desmos-api.js",
     "./styles.css",
     "./icons/thumbnail-512.png",
-    // "https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6",
+    "https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6",
 ];
 
 console.log("hi");
